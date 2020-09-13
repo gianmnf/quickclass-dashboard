@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useState, useEffect} from 'react'
+import app from './../../firebase';
 
 const ProfessorForm = (props) => {
     const initialFieldValues = {
@@ -61,6 +62,7 @@ const ProfessorForm = (props) => {
             </div>
             <div className="form-group">
                 <input type="submit" value={props.currentId === '' ? "Inserir":"Editar"} className="btn btn-primary btn-block"/>
+                <button className="btn btn-danger btn-block" onClick={() => app.auth().signOut()}>Sair</button>
             </div>
         </form>
     )

@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, {useState, useEffect} from 'react'
 import ProfessorForm from './ProfessorForm';
-import firebaseDb from "../../firebase";
+import app from "../../firebase";
 import swal from 'sweetalert';
 
 const Professores = () => {
@@ -10,7 +10,9 @@ const Professores = () => {
     var [currentId, setCurrentId] = useState('')
 
     useEffect(()=>{          
-          firebaseDb
+          app.firestore()
+            .collection('usuarios')
+            .doc('tipo')
             .collection('professores')
             .onSnapshot((querySnapshot) => {
                 const results = [];
@@ -31,14 +33,14 @@ const Professores = () => {
         try {
             if(obj.email.endsWith('@unipam.edu.br'))
             {
-            firebaseDb.collection('professores').add(obj)
-            .then(() => {
+                app.firestore().collection('usuarios').doc('tipo').collection('professores').add(obj)
+                .then(() => {
+                    setCurrentId('');
+                    swal("Sucesso", `Professor(a) ${obj.nome} adicionado(a) com sucesso!`, "success");
+                });
+            } else if(!obj.email.endsWith('@unipam.edu.br') || obj.email !== '') {
                 setCurrentId('');
-                swal("Sucesso", `Professor(a) ${obj.nome} adicionado(a) com sucesso!`, "success");
-            });
-            } else {
-                setCurrentId('');
-                swal("Erro", `Apenas emails com o domínio unipam.edu.br são permitidos!`, "error");
+                swal("Erro", "Apenas emails com o domínio unipam.edu.br são permitidos!", "error");
             }
         }
         catch(err) {
@@ -48,7 +50,7 @@ const Professores = () => {
         try {
             if(obj.email.endsWith('@unipam.edu.br'))
             {
-            firebaseDb.collection('professores').doc(professorObjects[currentId].key).update({
+            app.firestore().collection('usuarios').doc('tipo').collection('professores').doc(professorObjects[currentId].key).update({
                 nome: obj.nome,
                 email: obj.email
             })
@@ -56,9 +58,9 @@ const Professores = () => {
                     setCurrentId('');
                     swal("Sucesso", `Professor(a) ${obj.nome} atualizado(a) com sucesso!`, "success");
                 });
-            } else {
+            } else if(!obj.email.endsWith('@unipam.edu.br') || obj.email !== '') {
                 setCurrentId('');
-                swal("Erro", `Apenas emails com o domínio unipam.edu.br são permitidos!`, "error");
+                swal("Erro", "Apenas emails com o domínio unipam.edu.br são permitidos!", "error");
             }
         }
         catch(err) {
@@ -77,7 +79,7 @@ const Professores = () => {
                   })
                   .then((willDelete) => {
                     if (willDelete) {
-                        firebaseDb.collection('professores').doc(professorObjects[key].key).delete()
+                        app.firestore().collection('usuarios').doc('tipo').collection('professores').doc(professorObjects[key].key).delete()
                         .then(() => {
                             setCurrentId('');
                             swal("Professor(a) removido com sucesso!", {
@@ -118,8 +120,8 @@ const Professores = () => {
                             {
                                 Object.keys(professorObjects).map(id => {
                                     return <tr key={id}>
-                                        <td>{professorObjects[id].nome}</td>
-                                        <td>{professorObjects[id].email}</td>
+                                        <td style={{color: 'white'}}>{professorObjects[id].nome}</td>
+                                        <td style={{color: 'white'}}>{professorObjects[id].email}</td>
                                         <td>
                                             <button className="btn text-primary" onClick={() => setCurrentId(id)}>
                                                 <i className="fas fa-pencil-alt"></i>
