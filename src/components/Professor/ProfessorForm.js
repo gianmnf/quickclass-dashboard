@@ -31,7 +31,7 @@ const ProfessorForm = (props) => {
 
     const handleFormSubmit = e =>{
         e.preventDefault();
-        props.addOrEdit(values);
+        props.checkExistence(values);
     }
 
     return (

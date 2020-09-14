@@ -28,6 +28,34 @@ const Professores = () => {
             });
     },[])
 
+
+    const checkExistence = obj=>{
+        try {
+            app.firestore().collection('usuarios').doc('tipo').collection('professores')
+            .where('email', '==', obj.email)
+            .get()
+            .then(querySnapshot => {
+                const result = [];
+
+                querySnapshot.forEach((documentSnapshot) => {
+                    result.push({
+                        ...documentSnapshot.data(),
+                        key: documentSnapshot.id,
+                    });
+                });
+
+               if(result.length === 0) {
+                    addOrEdit(obj);
+                } else {
+                    swal("Erro", `Já existe um(a) professor(a) com este nome!`, "error");
+                    setCurrentId('');
+                }
+            });
+        } catch(err) {
+            swal("Erro", `${err}`, "error");
+        }
+    }
+
     const addOrEdit = obj=>{
         if (currentId === '')
         try {
@@ -44,7 +72,7 @@ const Professores = () => {
             }
         }
         catch(err) {
-            console.log(err);
+            swal("Erro", `${err}`, "error");
         }
         else
         try {
@@ -64,7 +92,7 @@ const Professores = () => {
             }
         }
         catch(err) {
-            console.log(err);
+            swal("Erro", `${err}`, "error");
         }        
     }
 
@@ -92,7 +120,7 @@ const Professores = () => {
                   });
                }
             catch(err) {
-                   console.log(err);
+                swal("Erro", `${err}`, "error");
             }
     }
 
@@ -105,7 +133,7 @@ const Professores = () => {
             </div>
             <div className="row">
                 <div className="col-md-5">
-                    <ProfessorForm {...({ addOrEdit, currentId, professorObjects })} />
+                    <ProfessorForm {...({ addOrEdit, currentId, professorObjects, checkExistence })} />
                 </div>
                 <div className="col-md-7">
                     <table className="table table-borderless table-stripped">

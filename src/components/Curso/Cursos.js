@@ -49,7 +49,7 @@ const Cursos = () => {
                 }
             });
         } catch(err) {
-            console.log(err);
+            swal("Erro", `${err}`, "error");
         }
     }
 
@@ -63,7 +63,7 @@ const Cursos = () => {
             });
         }
         catch(err) {
-            console.log(err);
+            swal("Erro", `${err}`, "error");
         }
         else
         try {
@@ -76,7 +76,7 @@ const Cursos = () => {
                 });
         }
         catch(err) {
-            console.log(err);
+            swal("Erro", `${err}`, "error");
         }        
     }
 
@@ -104,7 +104,7 @@ const Cursos = () => {
                   });
                }
             catch(err) {
-                   console.log(err);
+                   swal("Erro", `${err}`, "error");
             }
     }
 
