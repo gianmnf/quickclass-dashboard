@@ -2,7 +2,7 @@
 import React, {useState, useEffect} from 'react'
 import ProfessorForm from './ProfessorForm';
 import app from "../../firebase";
-import swal from 'sweetalert';
+import * as alerts from '../Functions/Alerts';
 
 const Professores = () => {
 
@@ -47,12 +47,12 @@ const Professores = () => {
                if(result.length === 0) {
                     addOrEdit(obj);
                 } else {
-                    swal("Erro", `Já existe um(a) professor(a) com este nome!`, "error");
+                    alerts.erro('Já existe um(a) professor(a) com este nome!');
                     setCurrentId('');
                 }
             });
         } catch(err) {
-            swal("Erro", `${err}`, "error");
+            alerts.erro(`${err}`);
         }
     }
 
@@ -64,15 +64,15 @@ const Professores = () => {
                 app.firestore().collection('usuarios').doc('tipo').collection('professores').add(obj)
                 .then(() => {
                     setCurrentId('');
-                    swal("Sucesso", `Professor(a) ${obj.nome} adicionado(a) com sucesso!`, "success");
+                    alerts.sucesso(`Professor(a) ${obj.nome} adicionado(a) com sucesso!`);
                 });
             } else if(!obj.email.endsWith('@unipam.edu.br') || obj.email !== '') {
                 setCurrentId('');
-                swal("Erro", "Apenas emails com o domínio unipam.edu.br são permitidos!", "error");
+                alerts.erro("Apenas emails com o domínio unipam.edu.br são permitidos!");
             }
         }
         catch(err) {
-            swal("Erro", `${err}`, "error");
+            alerts.erro(`${err}`);
         }
         else
         try {
@@ -84,43 +84,35 @@ const Professores = () => {
             })
                 .then(() => {
                     setCurrentId('');
-                    swal("Sucesso", `Professor(a) ${obj.nome} atualizado(a) com sucesso!`, "success");
+                    alerts.sucesso(`Professor(a) ${obj.nome} atualizado(a) com sucesso!`);
                 });
             } else if(!obj.email.endsWith('@unipam.edu.br') || obj.email !== '') {
                 setCurrentId('');
-                swal("Erro", "Apenas emails com o domínio unipam.edu.br são permitidos!", "error");
+                alerts.erro("Apenas emails com o domínio unipam.edu.br são permitidos!");
             }
         }
         catch(err) {
-            swal("Erro", `${err}`, "error");
+            alerts.erro(`${err}`);
         }        
     }
 
     const onDelete = key=>{
             try {
-                swal({
-                    title: "Tem certeza de que deseja remover este/esta professor(a)?",
-                    text: "Esta é uma operação irreversível!",
-                    icon: "warning",
-                    buttons: ["Não", "Sim"],
-                    dangerMode: true,
-                  })
+                alerts.remover('este/esta professor(a)')
                   .then((willDelete) => {
                     if (willDelete) {
                         app.firestore().collection('usuarios').doc('tipo').collection('professores').doc(professorObjects[key].key).delete()
                         .then(() => {
                             setCurrentId('');
-                            swal("Professor(a) removido com sucesso!", {
-                                icon: "success",
-                              });
+                            alerts.sucesso("Professor(a) removido(a) com sucesso!");
                         });
                     } else {
-                      swal("Operação Cancelada.");
+                      alerts.padrao("Operação Cancelada.");
                     }
                   });
                }
             catch(err) {
-                swal("Erro", `${err}`, "error");
+                alerts.erro(`${err}`);
             }
     }
 

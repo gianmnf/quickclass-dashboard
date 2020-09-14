@@ -1,17 +1,17 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, {useState, useEffect} from 'react'
-import CursoForm from './CursoForm';
+import TurmaForm from './TurmaForm';
 import app from "../../firebase";
 import * as alerts from '../Functions/Alerts';
 
-const Cursos = () => {
+const Turmas = () => {
 
-    var [cursoObjects, setCursoObjects] = useState({})
+    var [turmaObjects, setTurmaObjects] = useState({})
     var [currentId, setCurrentId] = useState('')
 
     useEffect(()=>{          
           app.firestore()
-            .collection('cursos')
+            .collection('turmas')
             .onSnapshot((querySnapshot) => {
                 const results = [];
 
@@ -22,13 +22,13 @@ const Cursos = () => {
                     });
                 });
 
-                setCursoObjects(results);
+                setTurmaObjects(results);
             });
     },[])
 
     const checkExistence = obj=>{
         try {
-            app.firestore().collection('cursos')
+            app.firestore().collection('turmas')
             .where('nome', '==', obj.nome)
             .get()
             .then(querySnapshot => {
@@ -44,7 +44,7 @@ const Cursos = () => {
                if(result.length === 0) {
                     addOrEdit(obj);
                 } else {
-                    alerts.erro('Já existe um curso com este nome!');
+                    alerts.erro(`Já existe uma turma com este nome!`);
                     setCurrentId('');
                 }
             });
@@ -56,10 +56,10 @@ const Cursos = () => {
     const addOrEdit = obj=>{
         if (currentId === '')
         try {
-                app.firestore().collection('cursos').add(obj)
+                app.firestore().collection('turmas').add(obj)
                 .then(() => {
                     setCurrentId('');
-                    alerts.sucesso(`Curso ${obj.nome} adicionado com sucesso!`);
+                    alerts.sucesso(`Turma ${obj.nome} adicionada com sucesso!`);
             });
         }
         catch(err) {
@@ -67,12 +67,13 @@ const Cursos = () => {
         }
         else
         try {
-            app.firestore().collection('cursos').doc(cursoObjects[currentId].key).update({
+            app.firestore().collection('turmas').doc(turmaObjects[currentId].key).update({
                 nome: obj.nome,
+                curso: obj.curso,
             })
                 .then(() => {
                     setCurrentId('');
-                    alerts.sucesso(`Curso ${obj.nome} atualizado com sucesso!`);
+                    alerts.sucesso(`Turma ${obj.nome} atualizada com sucesso!`);
                 });
         }
         catch(err) {
@@ -82,13 +83,13 @@ const Cursos = () => {
 
     const onDelete = key=>{
             try {
-                alerts.remover('este curso')
+                  alerts.remover('esta turma')  
                   .then((willDelete) => {
                     if (willDelete) {
-                        app.firestore().collection('cursos').doc(cursoObjects[key].key).delete()
+                        app.firestore().collection('turmas').doc(turmaObjects[key].key).delete()
                         .then(() => {
                             setCurrentId('');
-                            alerts.sucesso("Curso removido com sucesso!");
+                            alerts.sucesso("Turma removida com sucesso!");
                         });
                     } else {
                       alerts.padrao("Operação Cancelada.");
@@ -104,26 +105,28 @@ const Cursos = () => {
         <>
             <div className="jumbotron jumbotron-fluid">
                 <div className="container">
-                    <h1 className="display-4 text-center">Cadastro de Cursos</h1>
+                    <h1 className="display-4 text-center">Cadastro de Turmas</h1>
                 </div>
             </div>
             <div className="row">
                 <div className="col-md-5">
-                    <CursoForm {...({ addOrEdit, currentId, cursoObjects, checkExistence })} />
+                    <TurmaForm {...({ addOrEdit, currentId, turmaObjects, checkExistence })} />
                 </div>
                 <div className="col-md-7">
                     <table className="table table-borderless table-stripped">
                         <thead className="thead-light">
                             <tr>
+                                <th>Turma</th>
                                 <th>Curso</th>
                                 <th>Ações</th>
                             </tr>
                         </thead>
                         <tbody>
                             {
-                                Object.keys(cursoObjects).map(id => {
+                                Object.keys(turmaObjects).map(id => {
                                     return <tr key={id}>
-                                        <td style={{color: 'white'}}>{cursoObjects[id].nome}</td>
+                                        <td style={{color: 'white'}}>{turmaObjects[id].nome}</td>
+                                        <td style={{color: 'white'}}>{turmaObjects[id].curso}</td>
                                         <td>
                                             <button className="btn text-primary" onClick={() => setCurrentId(id)}>
                                                 <i className="fas fa-pencil-alt"></i>
@@ -145,4 +148,4 @@ const Cursos = () => {
     );
 }
 
-export default Cursos;
+export default Turmas;
