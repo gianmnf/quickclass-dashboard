@@ -3,6 +3,7 @@ import React, {useState, useEffect} from 'react'
 import ProfessorForm from './ProfessorForm';
 import app from "../../firebase";
 import * as alerts from '../Functions/Alerts';
+import Navbar from '../Navbar/index';
 
 const Professores = () => {
 
@@ -118,6 +119,7 @@ const Professores = () => {
 
     return (
         <>
+            <Navbar />
             <div className="jumbotron jumbotron-fluid">
                 <div className="container">
                     <h1 className="display-4 text-center">Cadastro de Professores</h1>

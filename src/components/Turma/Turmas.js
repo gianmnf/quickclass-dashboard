@@ -3,6 +3,7 @@ import React, {useState, useEffect} from 'react'
 import TurmaForm from './TurmaForm';
 import app from "../../firebase";
 import * as alerts from '../Functions/Alerts';
+import Navbar from '../Navbar/index';
 
 const Turmas = () => {
 
@@ -103,6 +104,7 @@ const Turmas = () => {
 
     return (
         <>
+            <Navbar />
             <div className="jumbotron jumbotron-fluid">
                 <div className="container">
                     <h1 className="display-4 text-center">Cadastro de Turmas</h1>
