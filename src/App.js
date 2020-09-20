@@ -17,9 +17,9 @@ function App() {
       <Router>
         <div className="col-md-8 offset-md-2">
           <PrivateRoute exact path="/" component={Professores} />
-          <Route exact path="/cursos" component={Cursos} />
-          <Route exact path="/turmas" component={Turmas} />
-          <Route exact path="/alunos" component={Aluno} />
+          <PrivateRoute exact path="/cursos" component={Cursos} />
+          <PrivateRoute exact path="/turmas" component={Turmas} />
+          <PrivateRoute exact path="/alunos" component={Aluno} />
           <Route exact path="/login" component={Login} />
           <Route exact path="/register" component={Register} />
         </div>
