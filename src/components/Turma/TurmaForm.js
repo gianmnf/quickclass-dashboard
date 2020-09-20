@@ -47,48 +47,50 @@ const TurmaForm = (props) => {
             [name]: value
         })
     }
-
+    
     const handleFormSubmit = e =>{
         e.preventDefault();
         props.checkExistence(values);
     }
 
     return (
-        <form autoComplete="off" onSubmit={handleFormSubmit}>
-            <div className="form-group input-group">
-                <div className="input-group-prepend">
-                    <div className="input-group-text">
-                        <i className="fas fa-book"></i>
-                    </div>
-                </div>
-                <input type="text" className="form-control" placeholder="Nome" name="nome" 
-                    value={values.nome}
-                    onChange={handleInputChange}
-                />
-            </div>
-            <div className="form-row">
-                <div className="form-group input-group col-md-12">
-                    <div className="input-group-prepend">
-                        <div className="input-group-text">
-                            <i className="fas fa-envelope"></i>
+        <>
+                <form autoComplete="off" onSubmit={handleFormSubmit}>
+                    <div className="form-group input-group">
+                        <div className="input-group-prepend">
+                            <div className="input-group-text">
+                                <i className="fas fa-quote-right"></i>
+                            </div>
                         </div>
+                        <input type="text" className="form-control" placeholder="Nome" name="nome" 
+                            value={values.nome}
+                            onChange={handleInputChange}
+                        />
                     </div>
-                    <select className="custom-select" name="curso" 
-                    value={values.curso}
-                    onChange={handleInputChange}>
-                        <option defaultValue>Selecione o Curso...</option>
-                        {
-                          Object.keys(cursos).map(id => {
-                                    return  <option key={id} value={cursos[id].nome}>{cursos[id].nome}</option>
-                                })  
-                        }
-                    </select>
-                </div>                
-            </div>
-            <div className="form-group">
-                <input type="submit" value={props.currentId === '' ? "Inserir":"Editar"} className="btn btn-primary btn-block"/>
-            </div>
-        </form>
+                    <div className="form-row">
+                        <div className="form-group input-group col-md-12">
+                            <div className="input-group-prepend">
+                                <div className="input-group-text">
+                                    <i className="fas fa-book"></i>
+                                </div>
+                            </div>
+                            <select className="custom-select" name="curso" 
+                            value={values.curso}
+                            onChange={handleInputChange}>
+                            <option defaultValue>Selecione o Curso...</option>
+                                {
+                                Object.keys(cursos).map(id => {
+                                            return  <option key={id} value={cursos[id].nome}>{cursos[id].nome}</option>
+                                        })  
+                                }
+                            </select>
+                        </div>                   
+                    </div>
+                    <div className="form-group">
+                        <input type="submit" value={props.currentId === '' ? "Inserir":"Editar"} className="btn btn-primary btn-block"/>
+                    </div>
+                </form>
+        </>
     )
 }
 
