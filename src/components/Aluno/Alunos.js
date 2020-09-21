@@ -29,7 +29,6 @@ const Alunos = () => {
             });
     },[])
 
-
     const checkExistence = obj=>{
         try {
             app.firestore().collection('usuarios').doc('tipo').collection('alunos')
@@ -37,23 +36,22 @@ const Alunos = () => {
             .get()
             .then(querySnapshot => {
                 const result = [];
-
+    
                 querySnapshot.forEach((documentSnapshot) => {
                     result.push({
                         ...documentSnapshot.data(),
                         key: documentSnapshot.id,
                     });
                 });
-
+                debugger
                if(result.length === 0) {
-                    addOrEdit(obj);
+                    return 0;
                 } else {
-                    alerts.erro('Já existe um(a) aluno(a) com este nome!');
-                    setCurrentId('');
+                    return 1;
                 }
             });
         } catch(err) {
-            alerts.erro(`${err}`);
+            alerts.erro(`${err}`);   
         }
     }
 

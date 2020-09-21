@@ -11,7 +11,7 @@ const Navbar = (props) => {
         }
 
         getCurrentUrl()
-    },[]);
+    },[props]);
     return (
         <>
             <header>
@@ -24,16 +24,19 @@ const Navbar = (props) => {
                         <div className="collapse navbar-collapse" id="nvbCollapse">
                             <ul className="navbar-nav ml-auto">
                                 <li className="nav-item pl-1">
-                                    <a className="nav-link" href="/cursos"><i className="fa fa-home fa-fw mr-1"></i>Cursos</a>
+                                    <a className="nav-link" href="/cursos"><i className="fa fa-book fa-fw mr-1"></i>Cursos</a>
                                 </li>
                                 <li className="nav-item pl-1">
-                                    <a className="nav-link" href="/professores"><i className="fa fa-th-list fa-fw mr-1"></i>Professores</a>
+                                    <a className="nav-link" href="/professores"><i className="fa fa-user fa-fw mr-1"></i>Professores</a>
                                 </li>
                                 <li className="nav-item pl-1">
-                                    <a className="nav-link" href="/turmas"><i className="fa fa-info-circle fa-fw mr-1"></i>Turmas</a>
+                                    <a className="nav-link" href="/alunos"><i className="fa fa-user-graduate fa-fw mr-1"></i>Alunos</a>
                                 </li>
                                 <li className="nav-item pl-1">
-                                    <button className="btn btn-link" onClick={() => app.auth().signOut()}><i className="fa fa-sign-in fa-fw mr-1"></i>Sair</button>
+                                    <a className="nav-link" href="/turmas"><i className="fa fa-users fa-fw mr-1"></i>Turmas</a>
+                                </li>
+                                <li className="nav-item pl-1">
+                                    <button className="btn nav-link" onClick={() => app.auth().signOut()}><i className="fa fa-sign-out-alt fa-fw mr-1"></i>Sair</button>
                                 </li>
                             </ul>
                         </div>
