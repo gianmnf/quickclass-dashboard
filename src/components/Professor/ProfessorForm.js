@@ -1,6 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useState, useEffect} from 'react'
-import app from './../../firebase';
 
 const ProfessorForm = (props) => {
     const initialFieldValues = {

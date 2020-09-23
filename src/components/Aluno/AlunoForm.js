@@ -1,34 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useState, useEffect} from 'react';
-import app from "../../firebase";
 
 const AlunoForm = (props) => {
     const initialFieldValues = {
         nome: '',
-        email: '',
-        turma: ''
+        email: ''
     }
 
     var [values, setValues] = useState(initialFieldValues)
-    var [turmas, setTurmas] = useState({})
 
     useEffect(()=>{
-        async function getTurmas() {
-            app.firestore()
-            .collection('turmas')
-            .onSnapshot((querySnapshot) => {
-                const results = [];
-
-                querySnapshot.forEach((documentSnapshot) => {
-                    results.push({
-                        ...documentSnapshot.data(),
-                        key: documentSnapshot.id,
-                    });
-                });
-
-                setTurmas(results);
-            });
-        }
         if(props.currentId === '')
             setValues({
                 ...initialFieldValues
@@ -37,8 +18,6 @@ const AlunoForm = (props) => {
             setValues({
                 ...props.turmaObjects[props.currentId]
             })
-
-        getTurmas()
     }, [props.currentId, props.turmaObjects])
 
     const handleInputChange = e =>{
@@ -78,24 +57,7 @@ const AlunoForm = (props) => {
                         value={values.email}
                         onChange={handleInputChange}
                     />
-                </div>
-                <div className="form-group input-group col-md-12">
-                            <div className="input-group-prepend">
-                                <div className="input-group-text">
-                                    <i className="fas fa-users"></i>
-                                </div>
-                            </div>
-                            <select className="custom-select" name="turma" 
-                            value={values.turma}
-                            onChange={handleInputChange}>
-                            <option defaultValue>Selecione a turma...</option>
-                                {
-                                Object.keys(turmas).map(id => {
-                                            return  <option key={id} value={turmas[id].nome}>{turmas[id].nome}</option>
-                                        })  
-                                }
-                            </select>
-                </div>       
+                </div>      
             </div>
             <div className="form-group">
                 <input type="submit" value={props.currentId === '' ? "Inserir":"Editar"} className="btn btn-primary btn-block"/>

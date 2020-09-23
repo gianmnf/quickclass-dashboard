@@ -1,7 +1,6 @@
 import React, {useEffect} from 'react';
 import './index.css';
 import app from '../../firebase';
-import {Link} from "react-router-dom";
 
 const Navbar = (props) => {
 
