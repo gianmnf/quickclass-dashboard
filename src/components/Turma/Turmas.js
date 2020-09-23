@@ -21,6 +21,8 @@ const Turmas = () => {
                         ...documentSnapshot.data(),
                         key: documentSnapshot.id,
                     });
+
+                    console.log(documentSnapshot.data().listaProfessores);
                 });
 
                 setTurmaObjects(results);
@@ -29,12 +31,12 @@ const Turmas = () => {
 
     const checkExistence = obj=>{
         try {
+            var docRef = app.firestore().collection('turmas').doc(obj.key);
             app.firestore().collection('turmas')
             .where('nome', '==', obj.nome)
             .get()
             .then(querySnapshot => {
                 const result = [];
-
                 querySnapshot.forEach((documentSnapshot) => {
                     result.push({
                         ...documentSnapshot.data(),
