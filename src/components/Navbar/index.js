@@ -26,6 +26,9 @@ const Navbar = (props) => {
                                     <a className="nav-link" href="/cursos"><i className="fa fa-book fa-fw mr-1"></i>Cursos</a>
                                 </li>
                                 <li className="nav-item pl-1">
+                                    <a className="nav-link" href="/disciplinas"><i className="fa fa-book-open fa-fw mr-1"></i>Disciplinas</a>
+                                </li>
+                                <li className="nav-item pl-1">
                                     <a className="nav-link" href="/professores"><i className="fa fa-user fa-fw mr-1"></i>Professores</a>
                                 </li>
                                 <li className="nav-item pl-1">

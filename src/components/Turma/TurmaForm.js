@@ -169,7 +169,6 @@ const TurmaForm = (props) => {
                                 name="listaAlunos"
                                 options={alunos}
                                 components={animatedComponents}
-                                value={values.listaAlunos}
                                 onChange={handleAlunosChange}
                                 className="col-md-12 mb-3"
                                 placeholder="Selecione os alunos..."
@@ -184,7 +183,7 @@ const TurmaForm = (props) => {
                                 onChange={handleProfessoresChange}
                                 className="col-md-12 mb-3"
                                 placeholder="Selecione os professores..."
-                            />          
+                            />       
                     </div>
                     <div className="form-group">
                         <input type="submit" value={props.currentId === '' ? "Inserir":"Editar"} className="btn btn-primary btn-block"/>

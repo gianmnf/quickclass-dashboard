@@ -31,7 +31,6 @@ const Turmas = () => {
 
     const checkExistence = obj=>{
         try {
-            var docRef = app.firestore().collection('turmas').doc(obj.key);
             app.firestore().collection('turmas')
             .where('nome', '==', obj.nome)
             .get()
@@ -72,7 +71,9 @@ const Turmas = () => {
         try {
             app.firestore().collection('turmas').doc(turmaObjects[currentId].key).update({
                 nome: obj.nome,
-                curso: obj.curso
+                curso: obj.curso,
+                listaAlunos: obj.listaAlunos,
+                listaProfessores: obj.listaProfessores
             })
                 .then(() => {
                     setCurrentId('');

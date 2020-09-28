@@ -1,15 +1,39 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect} from 'react';
+import app from "../../firebase";
+import Select from 'react-select';
+import makeAnimated from 'react-select/animated';
 
 const ProfessorForm = (props) => {
     const initialFieldValues = {
         nome: '',
-        email: ''
+        email: '',
+        listaDisciplinas: []
     }
 
+    const animatedComponents = makeAnimated();
+
     var [values, setValues] = useState(initialFieldValues)
+    var [disciplinas, setDisciplinas] = useState({})
 
     useEffect(()=>{
+        async function getDisciplinas() {
+            app.firestore()
+            .collection('disciplinas')
+            .onSnapshot((querySnapshot) => {
+                const results = [];
+
+                querySnapshot.forEach((documentSnapshot) => {
+                    results.push({
+                        value: documentSnapshot.data().nome,
+                        label: documentSnapshot.data().nome,
+                        key: documentSnapshot.id,
+                    });
+                });
+
+                setDisciplinas(results);
+            });
+        }
         if(props.currentId === '')
             setValues({
                 ...initialFieldValues
@@ -18,6 +42,8 @@ const ProfessorForm = (props) => {
             setValues({
                 ...props.professorObjects[props.currentId]
             })
+
+        getDisciplinas()
     }, [props.currentId, props.professorObjects])
 
     const handleInputChange = e =>{
@@ -26,6 +52,21 @@ const ProfessorForm = (props) => {
             ...values,
             [name]: value
         })
+    }
+
+    const handleDisciplinasChange = e => {
+        var selectedDisciplinas = [];
+        if(e === null) {
+            selectedDisciplinas = [];
+        } else {
+            e.forEach(val => {
+                selectedDisciplinas.push(val.value);
+            });
+            setValues({
+                ...values,
+                listaDisciplinas: selectedDisciplinas
+            })
+        }
     }
 
     const handleFormSubmit = e =>{
@@ -57,7 +98,17 @@ const ProfessorForm = (props) => {
                         value={values.email}
                         onChange={handleInputChange}
                     />
-                </div>                
+                </div>
+                    <Select
+                        isMulti
+                        isSearchable
+                        name="listaDisciplinas"
+                        options={disciplinas}
+                        components={animatedComponents}
+                        onChange={handleDisciplinasChange}
+                        className="col-md-12 mb-3"
+                        placeholder="Selecione as disciplinas..."
+                    />             
             </div>
             <div className="form-group">
                 <input type="submit" value={props.currentId === '' ? "Inserir":"Editar"} className="btn btn-primary btn-block"/>

@@ -1,20 +1,18 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, {useState, useEffect} from 'react'
-import ProfessorForm from './ProfessorForm';
+import DisciplinaForm from './DisciplinaForm';
 import app from "../../firebase";
 import * as alerts from '../Functions/Alerts';
 import Navbar from '../Navbar/index';
 
-const Professores = () => {
+const Disciplinas = () => {
 
-    var [professorObjects, setProfessorObjects] = useState({})
+    var [disciplinaObjects, setDisciplinaObjects] = useState({})
     var [currentId, setCurrentId] = useState('')
 
     useEffect(()=>{          
           app.firestore()
-            .collection('usuarios')
-            .doc('tipo')
-            .collection('professores')
+            .collection('disciplinas')
             .onSnapshot((querySnapshot) => {
                 const results = [];
 
@@ -25,15 +23,14 @@ const Professores = () => {
                     });
                 });
 
-                setProfessorObjects(results);
+                setDisciplinaObjects(results);
             });
     },[])
 
-
     const checkExistence = obj=>{
         try {
-            app.firestore().collection('usuarios').doc('tipo').collection('professores')
-            .where('email', '==', obj.email)
+            app.firestore().collection('disciplinas')
+            .where('nome', '==', obj.nome)
             .get()
             .then(querySnapshot => {
                 const result = [];
@@ -48,7 +45,7 @@ const Professores = () => {
                if(result.length === 0) {
                     addOrEdit(obj);
                 } else {
-                    alerts.erro('Já existe um(a) professor(a) com este nome!');
+                    alerts.erro('Já existe uma disciplina com este nome!');
                     setCurrentId('');
                 }
             });
@@ -60,38 +57,24 @@ const Professores = () => {
     const addOrEdit = obj=>{
         if (currentId === '')
         try {
-            if(obj.email.endsWith('@unipam.edu.br'))
-            {
-                app.firestore().collection('usuarios').doc('tipo').collection('professores').add(obj)
+                app.firestore().collection('disciplinas').add(obj)
                 .then(() => {
                     setCurrentId('');
-                    alerts.sucesso(`Professor(a) ${obj.nome} adicionado(a) com sucesso!`);
-                });
-            } else if(!obj.email.endsWith('@unipam.edu.br') || obj.email !== '') {
-                setCurrentId('');
-                alerts.erro("Apenas emails com o domínio unipam.edu.br são permitidos!");
-            }
+                    alerts.sucesso(`Disciplina ${obj.nome} adicionada com sucesso!`);
+            });
         }
         catch(err) {
             alerts.erro(`${err}`);
         }
         else
         try {
-            if(obj.email.endsWith('@unipam.edu.br'))
-            {
-            app.firestore().collection('usuarios').doc('tipo').collection('professores').doc(professorObjects[currentId].key).update({
+            app.firestore().collection('disciplinas').doc(disciplinaObjects[currentId].key).update({
                 nome: obj.nome,
-                email: obj.email,
-                listaDisciplinas: obj.listaDisciplinas
             })
                 .then(() => {
                     setCurrentId('');
-                    alerts.sucesso(`Professor(a) ${obj.nome} atualizado(a) com sucesso!`);
+                    alerts.sucesso(`Disciplina ${obj.nome} atualizada com sucesso!`);
                 });
-            } else if(!obj.email.endsWith('@unipam.edu.br') || obj.email !== '') {
-                setCurrentId('');
-                alerts.erro("Apenas emails com o domínio unipam.edu.br são permitidos!");
-            }
         }
         catch(err) {
             alerts.erro(`${err}`);
@@ -100,13 +83,13 @@ const Professores = () => {
 
     const onDelete = key=>{
             try {
-                alerts.remover('este/esta professor(a)')
+                alerts.remover('esta disciplina')
                   .then((willDelete) => {
                     if (willDelete) {
-                        app.firestore().collection('usuarios').doc('tipo').collection('professores').doc(professorObjects[key].key).delete()
+                        app.firestore().collection('disciplinas').doc(disciplinaObjects[key].key).delete()
                         .then(() => {
                             setCurrentId('');
-                            alerts.sucesso("Professor(a) removido(a) com sucesso!");
+                            alerts.sucesso("Disciplina removida com sucesso!");
                         });
                     } else {
                       alerts.padrao("Operação Cancelada.");
@@ -114,7 +97,7 @@ const Professores = () => {
                   });
                }
             catch(err) {
-                alerts.erro(`${err}`);
+                   alerts.erro(`${err}`);
             }
     }
 
@@ -123,28 +106,26 @@ const Professores = () => {
             <Navbar />
             <div className="jumbotron jumbotron-fluid">
                 <div className="container">
-                    <h1 className="display-4 text-center">Cadastro de Professores</h1>
+                    <h1 className="display-4 text-center">Cadastro de Disciplinas</h1>
                 </div>
             </div>
             <div className="row">
                 <div className="col-md-5">
-                    <ProfessorForm {...({ addOrEdit, currentId, professorObjects, checkExistence })} />
+                    <DisciplinaForm {...({ addOrEdit, currentId, disciplinaObjects, checkExistence })} />
                 </div>
                 <div className="col-md-7">
                     <table className="table table-borderless table-stripped">
                         <thead className="thead-light">
                             <tr>
-                                <th>Nome</th>
-                                <th>Email</th>
+                                <th>Disciplina</th>
                                 <th>Ações</th>
                             </tr>
                         </thead>
                         <tbody>
                             {
-                                Object.keys(professorObjects).map(id => {
+                                Object.keys(disciplinaObjects).map(id => {
                                     return <tr key={id}>
-                                        <td style={{color: 'white'}}>{professorObjects[id].nome}</td>
-                                        <td style={{color: 'white'}}>{professorObjects[id].email}</td>
+                                        <td style={{color: 'white'}}>{disciplinaObjects[id].nome}</td>
                                         <td>
                                             <button className="btn text-primary" onClick={() => setCurrentId(id)}>
                                                 <i className="fas fa-pencil-alt"></i>
@@ -166,4 +147,4 @@ const Professores = () => {
     );
 }
 
-export default Professores;
+export default Disciplinas;
