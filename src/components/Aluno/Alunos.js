@@ -43,11 +43,11 @@ const Alunos = () => {
                         key: documentSnapshot.id,
                     });
                 });
-                debugger
                if(result.length === 0) {
-                    return 0;
+                    addOrEdit(obj);
                 } else {
-                    return 1;
+                    alerts.erro('Já existe um(a) aluno(a) com este nome!');
+                    setCurrentId('');
                 }
             });
         } catch(err) {
@@ -56,6 +56,7 @@ const Alunos = () => {
     }
 
     const addOrEdit = obj=>{
+	console.log(currentId);
         if (currentId === '')
         try {
             if(obj.email.endsWith('@unipam.edu.br'))
